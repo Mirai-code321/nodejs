@@ -1,4 +1,4 @@
-import getConnection from "../config/database";
+import getConnection from "config/database";
 
 const handleCreateUser = async (
   name: string,
@@ -8,7 +8,8 @@ const handleCreateUser = async (
   //insert into database
   const connection = await getConnection();
   try {
-    const sql = "INSERT INTO `users`(`name`, `email`, `address`) VALUES (?, ?, ?)";
+    const sql =
+      "INSERT INTO `users`(`name`, `email`, `address`) VALUES (?, ?, ?)";
     const values = [name, email, address];
 
     const [result, fields] = await connection.execute(sql, values);
@@ -21,6 +22,7 @@ const handleCreateUser = async (
 
 const getAllUsers = async () => {
   const connection = await getConnection();
+  console.log("bla bla");
   // A simple SELECT query
   try {
     const [results, fields] = await connection.query("SELECT * FROM `users`");
@@ -31,4 +33,59 @@ const getAllUsers = async () => {
   }
 };
 
-export { handleCreateUser, getAllUsers };
+const handleDeleteUser = async (id: string) => {
+  try {
+    const connection = await getConnection();
+    const sql = "DELETE FROM `users` WHERE `id` = ? LIMIT 1";
+    const values = [id];
+
+    const [result, fields] = await connection.execute(sql, values);
+
+    return result;
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+};
+
+const getUserById = async (id: string) => {
+  try {
+    const connection = await getConnection();
+    const sql = "SELECT * FROM `users` WHERE `id` = ?";
+    const values = [id];
+
+    const [result, fields] = await connection.execute(sql, values);
+    return result[0];
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+};
+
+const updateUserById = async (
+  id: string,
+  name: string,
+  address: string,
+  email: string,
+) => {
+  try {
+    const connection = await getConnection();
+    const sql =
+      "UPDATE `users` SET `name` = ?, `email` = ?, `address` = ? WHERE `id` = ?";
+    const values = [name, email, address, id];
+
+    const [result, fields] = await connection.execute(sql, values);
+    return result;
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+};
+
+export {
+  handleCreateUser,
+  getAllUsers,
+  handleDeleteUser,
+  getUserById,
+  updateUserById,
+};

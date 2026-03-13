@@ -1,5 +1,5 @@
-import getConnection from "./config/database";
-import webRoutes from "./routes/web";
+import getConnection from "config/database";
+import webRoutes from "routes/web";
 
 const express = require("express");
 const app = express();
